@@ -23,7 +23,7 @@ import javax.jms.JMSException;
 public class MessagingRabbitmqApplication {
 	static final String fromQueue = "o365MailTasks";
 	static final String toQueue = "o365SharepointTasks";
-	static final AtomicInteger counter = new AtomicInteger(200);
+	static final AtomicInteger numOfMessagesToMove = new AtomicInteger(200);
 
 	private String username = "prd-tasks";
 	private String password = "ahTh3ahr";

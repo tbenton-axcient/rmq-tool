@@ -11,7 +11,7 @@ import javax.jms.TextMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.cloudfinder.rmqtool.MessagingRabbitmqApplication.counter;
+import static com.cloudfinder.rmqtool.MessagingRabbitmqApplication.numOfMessagesToMove;
 import static com.cloudfinder.rmqtool.MessagingRabbitmqApplication.toQueue;
 
 @Component
@@ -27,11 +27,11 @@ public class MyMessageListener implements javax.jms.MessageListener {
     public void onMessage(Message message) {
         TextMessage txtMsg = (TextMessage) message;
         jmsTemplate.send(toQueue, new TextMessageCreator(txtMsg.getText()));
-        counter.decrementAndGet();
-        if (counter.get() % 50 == 0) {
-            log.info(counter.get() + " left");
+        numOfMessagesToMove.decrementAndGet();
+        if (numOfMessagesToMove.get() % 50 == 0) {
+            log.info(numOfMessagesToMove.get() + " left");
         }
-        if (counter.get() < 1) {
+        if (numOfMessagesToMove.get() < 1) {
             log.info("stopping container");
             container.stop();
         }
