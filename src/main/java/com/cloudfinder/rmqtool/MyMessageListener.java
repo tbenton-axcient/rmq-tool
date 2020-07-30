@@ -30,7 +30,7 @@ public class MyMessageListener implements javax.jms.MessageListener {
         TextMessage txtMsg = (TextMessage) message;
         jmsTemplate.send(toQueue, new TextMessageCreator(txtMsg.getText()));
         numOfMessagesToMove.decrementAndGet();
-        if (numOfMessagesToMove.get() % 50 == 0) {
+        if (numOfMessagesToMove.get() % 10 == 0) {
             log.info(numOfMessagesToMove.get() + " left");
         }
         if (numOfMessagesToMove.get() < 1) {
