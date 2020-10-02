@@ -13,7 +13,7 @@ import javax.jms.TextMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.cloudfinder.rmqtool.MessagingRabbitmqApplication.toQueue;
+import static com.cloudfinder.rmqtool.MessagingRabbitmqApplication.getToQueue;
 
 @Component
 @Slf4j
@@ -22,13 +22,15 @@ public class MyMessageListener implements javax.jms.MessageListener {
     JmsTemplate jmsTemplate;
     @Autowired
     DefaultMessageListenerContainer container;
-    AtomicInteger numOfMessagesToMove = new AtomicInteger(1_000);
+    AtomicInteger numOfMessagesToMove = new AtomicInteger(5000);
 
     @SneakyThrows
     @Override
     public void onMessage(Message message) {
         TextMessage txtMsg = (TextMessage) message;
-        jmsTemplate.send(toQueue, new TextMessageCreator(txtMsg.getText()));
+        String queueName = getToQueue();
+        log.info("Sending a message to {}", queueName);
+        jmsTemplate.send(queueName, new TextMessageCreator(txtMsg.getText()));
         numOfMessagesToMove.decrementAndGet();
         if (numOfMessagesToMove.get() % 10 == 0) {
             log.info(numOfMessagesToMove.get() + " left");
